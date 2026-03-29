@@ -125,3 +125,36 @@ else:
     col1.metric("Total Records", len(filtered_df))
     col2.metric("Avg Bill", f"${filtered_df['total_bill'].mean():.2f}")
     col3.metric("Avg Tip", f"${filtered_df['tip'].mean():.2f}")
+    
+    # -----------------------------
+    # DYNAMIC CHART SELECTOR
+    # -----------------------------
+    st.subheader("Dynamic Chart Builder")
+
+    chart_type = st.selectbox("Select Chart Type", ["Bar", "Line", "Scatter", "Pie"])
+
+    x_axis = st.selectbox("X Axis", filtered_df.columns)
+    y_axis = st.selectbox("Y Axis", filtered_df.select_dtypes(include='number').columns)
+
+    if chart_type == "Bar":
+        fig = px.bar(filtered_df, x=x_axis, y=y_axis, color="day")
+    elif chart_type == "Line":
+        fig = px.line(filtered_df, x=x_axis, y=y_axis)
+    elif chart_type == "Scatter":
+        fig = px.scatter(filtered_df, x=x_axis, y=y_axis, color="day")
+    elif chart_type == "Pie":
+        fig = px.pie(filtered_df, names=x_axis, values=y_axis)
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # -----------------------------
+    # AUTO REFRESH (REAL-TIME)
+    # -----------------------------
+    st.subheader("Real-Time Simulation")
+
+    refresh = st.checkbox("Enable Auto Refresh")
+
+    if refresh:
+        st.info("Refreshing every 10 seconds...")
+        time.sleep(10)
+        st.rerun()
