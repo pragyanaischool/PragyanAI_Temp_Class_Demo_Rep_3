@@ -45,3 +45,29 @@ if "logged_in" not in st.session_state:
 
 menu = ["Login", "Register"]
 choice = st.sidebar.selectbox("Menu", menu)
+
+if not st.session_state.logged_in:
+
+    if choice == "Login":
+        st.title("Login")
+
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+
+        if st.button("Login"):
+            if login_user(username, password):
+                st.session_state.logged_in = True
+                st.success("✅ Logged in successfully")
+                st.rerun()
+            else:
+                st.error("❌ Invalid credentials")
+
+    elif choice == "Register":
+        st.title("Register")
+
+        new_user = st.text_input("Username")
+        new_pass = st.text_input("Password", type="password")
+
+        if st.button("Register"):
+            register_user(new_user, new_pass)
+            st.success("✅ Account created")
