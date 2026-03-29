@@ -88,3 +88,40 @@ else:
     df = load_data()
 
     st.title("AI Tableau-Style Dashboard")
+    # -----------------------------
+    # SIDEBAR FILTERS
+    # -----------------------------
+    st.sidebar.header("Filters")
+
+    # Date filter
+    date_range = st.sidebar.date_input(
+        "Select Date Range",
+        [df["date"].min(), df["date"].max()]
+    )
+
+    # Category filters
+    day = st.sidebar.multiselect("Day", df["day"].unique(), default=df["day"].unique())
+    time_filter = st.sidebar.multiselect("Time", df["time"].unique(), default=df["time"].unique())
+
+    # -----------------------------
+    # APPLY FILTERS
+    # -----------------------------
+    filtered_df = df[
+        (df["day"].isin(day)) &
+        (df["time"].isin(time_filter))
+    ]
+
+    if len(date_range) == 2:
+        filtered_df = filtered_df[
+            (filtered_df["date"] >= pd.to_datetime(date_range[0])) &
+            (filtered_df["date"] <= pd.to_datetime(date_range[1]))
+        ]
+
+    # -----------------------------
+    # KPIs
+    # -----------------------------
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Total Records", len(filtered_df))
+    col2.metric("Avg Bill", f"${filtered_df['total_bill'].mean():.2f}")
+    col3.metric("Avg Tip", f"${filtered_df['tip'].mean():.2f}")
