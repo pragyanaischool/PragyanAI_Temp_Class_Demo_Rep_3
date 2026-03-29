@@ -158,3 +158,38 @@ else:
         st.info("Refreshing every 10 seconds...")
         time.sleep(10)
         st.rerun()
+    # -----------------------------
+    # ADVANCED CHARTS
+    # -----------------------------
+    st.subheader("Advanced Analytics")
+
+    col4, col5 = st.columns(2)
+
+    with col4:
+        fig1, ax1 = plt.subplots()
+        sns.boxplot(x="day", y="total_bill", data=filtered_df, ax=ax1)
+        st.pyplot(fig1)
+
+    with col5:
+        fig2, ax2 = plt.subplots()
+        sns.heatmap(filtered_df.corr(numeric_only=True), annot=True, ax=ax2)
+        st.pyplot(fig2)
+
+    # -----------------------------
+    # DATA TABLE + DOWNLOAD
+    # -----------------------------
+    st.subheader("Data Table")
+    st.dataframe(filtered_df)
+
+    st.download_button(
+        "Download CSV",
+        filtered_df.to_csv(index=False),
+        "data.csv"
+    )
+
+    # -----------------------------
+    # LOGOUT
+    # -----------------------------
+    if st.button("Logout"):
+        st.session_state.logged_in = False
+        st.rerun()
