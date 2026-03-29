@@ -71,3 +71,20 @@ if not st.session_state.logged_in:
         if st.button("Register"):
             register_user(new_user, new_pass)
             st.success("✅ Account created")
+else:
+
+    # -----------------------------
+    # LOAD DATA (REAL-TIME SIMULATION)
+    # -----------------------------
+    @st.cache_data(ttl=10)
+    def load_data():
+        url = "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/tips.csv"
+        df = pd.read_csv(url)
+
+        # Add fake date column
+        df["date"] = pd.date_range(start="2024-01-01", periods=len(df), freq="D")
+        return df
+
+    df = load_data()
+
+    st.title("AI Tableau-Style Dashboard")
